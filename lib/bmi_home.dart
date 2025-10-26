@@ -121,8 +121,8 @@ class _BmiHomeState extends State<BmiHome> {
   String? category;
   String categoryResult(double bmi) {
     if (bmi < 18.5) return "Under Weight";
-    if (bmi < 25) return "Normal";
-    if (bmi < 30) return "Overweight";
+    if (bmi <= 24.9) return "Normal";
+    if (bmi <= 29.9) return "Overweight";
     return "Obese";
   }
 
@@ -130,8 +130,8 @@ class _BmiHomeState extends State<BmiHome> {
   Color bmiColor(double bmi){
     if (bmi == 0) return Colors.grey; //default
     if (bmi < 18.5) return Colors.blue;
-    if (bmi < 25) return Colors.green;
-    if (bmi < 30) return Colors.orange;
+    if (bmi <= 24.9) return Colors.green;
+    if (bmi <= 29.9) return Colors.orange;
     return Colors.red;
   }
 
@@ -139,8 +139,8 @@ class _BmiHomeState extends State<BmiHome> {
   Image bmiImage(double bmi){
     if (bmi == 0) return Image(image: AssetImage('asset/none.jpg'),width: 240,);
     if (bmi < 18.5) return Image(image: AssetImage('asset/underweight.jpeg'),width: 240,);
-    if (bmi < 25) return Image(image: AssetImage('asset/normal.jpg'),width: 240,);
-    if (bmi < 30) Image(image: AssetImage('asset/overweight.jpg'),width: 240,);
+    if (bmi <= 24.9) return Image(image: AssetImage('asset/normal.jpg'),width: 240,);
+    if (bmi <= 29.9) return Image(image: AssetImage('asset/overweight.jpg'),width: 240,);
     return Image(image: AssetImage('asset/obese.png'),width: 240,);
   }
 

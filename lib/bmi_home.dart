@@ -137,11 +137,11 @@ class _BmiHomeState extends State<BmiHome> {
 
   //get images based no bmi result.....//
   Image bmiImage(double bmi){
-    if (bmi == 0) return Image(image: AssetImage('asset/none.jpg'),width: 250,);
-    if (bmi < 18.5) return Image(image: AssetImage('asset/underweight.jpg'),width: 250,);
-    if (bmi < 25) return Image(image: AssetImage('asset/normal.jpg'),width: 250,);
-    if (bmi < 30) Image(image: AssetImage('asset/overweight.jpg'),width: 250,);
-    return Image(image: AssetImage('asset/obese.png'),width: 250,);
+    if (bmi == 0) return Image(image: AssetImage('asset/none.jpg'),width: 240,);
+    if (bmi < 18.5) return Image(image: AssetImage('asset/underweight.jpeg'),width: 240,);
+    if (bmi < 25) return Image(image: AssetImage('asset/normal.jpg'),width: 240,);
+    if (bmi < 30) Image(image: AssetImage('asset/overweight.jpg'),width: 240,);
+    return Image(image: AssetImage('asset/obese.png'),width: 240,);
   }
 
   //method for calculation of input data units................//

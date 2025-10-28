@@ -436,6 +436,7 @@ class _BmiHomeState extends State<BmiHome> {
                 ),
               ),
               SizedBox(height: 10),
+              if(bmiresult != null)...[
               Expanded(
                 child: Card(
                   color: bmiColor(double.tryParse(bmiresult ?? '') ?? 0.0),
@@ -470,7 +471,7 @@ class _BmiHomeState extends State<BmiHome> {
                     ),
                   ),
                 ),
-              ),
+              )],
             ],
           ),
         ),

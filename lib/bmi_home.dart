@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 enum WeightType { kg, lbs }
 
 //here we define data type we need or calculate BMI.......data type..//
-enum HeightType { cm, feetInch }
+enum HeightType { cm, feetInch, meter }
 
 class BmiHome extends StatefulWidget {
   const BmiHome({super.key});
@@ -23,6 +23,7 @@ class _BmiHomeState extends State<BmiHome> {
   //text filed er jonno controller neoa holo....controller..//
   final TextEditingController weightKGController = TextEditingController();
   final TextEditingController weightLbsController = TextEditingController();
+  final TextEditingController heightMeterController = TextEditingController();
   final TextEditingController heightCMController = TextEditingController();
   final TextEditingController heightFeetController = TextEditingController();
   final TextEditingController heightInchController = TextEditingController();
@@ -33,45 +34,61 @@ class _BmiHomeState extends State<BmiHome> {
   double? lbsToKgCal() {
     final weightLbs = double.tryParse(weightLbsController.text.trim());
     //here we getting height units calculation..........................//height unit..//
-    final m = heightType == HeightType.cm ? cmToM() : feetInchToM();
+    double? m;
+    if (heightType == HeightType.cm) {
+      m = cmToM();
+    } else if (heightType == HeightType.feetInch) {
+      m = feetInchToM();
+    } else {
+      m = meterToM();
+    }
 
     if (m == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Invalid Value')));
+      ).showSnackBar(SnackBar(content: Text('Invalid Height Value')));
       return null;
     }
     //condition checking for weightLbs input...............//
     if (weightLbs == null || weightLbs <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid Pound Value')));
-    } else {
-      //here we convert lbs value to kg............///lbs to kg//
-      //we know 1 pound = 0.45359237 KG...........//
-      final lastKg = weightLbs * 0.45359237;
-      return lastKg / (m*m);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Invalid Pound Value')));
+      return null;
     }
-    return null;
+    //here we convert lbs value to kg............///lbs to kg//
+    //we know 1 pound = 0.45359237 KG...........//
+    final lastKg = weightLbs * 0.45359237;
+    return lastKg / (m * m);
   }
 
   //kg calculation here.............kg calculate...//
   double? kgCal() {
     final weightKg = double.tryParse(weightKGController.text.trim());
     //here we getting height units calculation..........................//height unit..//
-    final m = heightType == HeightType.cm ? cmToM() : feetInchToM();
+    double? m;
+    if (heightType == HeightType.cm) {
+      m = cmToM();
+    } else if (heightType == HeightType.feetInch) {
+      m = feetInchToM();
+    } else {
+      m = meterToM();
+    }
 
     if (m == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Invalid Value')));
+      ).showSnackBar(SnackBar(content: Text('Invalid Height Value')));
       return null;
     }
     //condition checking for weightLbs input...............//
     if (weightKg == null || weightKg <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid KG Value')));
-    } else {
-      return weightKg / (m*m);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Invalid KG Value')));
+      return null;
     }
-    return null;
+    return weightKg / (m * m);
   }
 
   //create methode to convert cm to miter, feet/inch to meter.................converting...//
@@ -117,6 +134,19 @@ class _BmiHomeState extends State<BmiHome> {
     }
   }
 
+  //meter value input handle here......meter input..//
+  double? meterToM() {
+    final m = double.tryParse(heightMeterController.text.trim());
+
+    if (m == null || m <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Invalid meter value')));
+      return null;
+    }
+    return m;
+  }
+
   //method for bmi weight chart categories.............//
   String? category;
   String categoryResult(double bmi) {
@@ -127,7 +157,7 @@ class _BmiHomeState extends State<BmiHome> {
   }
 
   //methode for colors depends on category.....///
-  Color bmiColor(double bmi){
+  Color bmiColor(double bmi) {
     if (bmi == 0) return Colors.grey; //default
     if (bmi < 18.5) return Colors.blue;
     if (bmi <= 24.9) return Colors.green;
@@ -136,17 +166,19 @@ class _BmiHomeState extends State<BmiHome> {
   }
 
   //get images based no bmi result.....//
-  Image bmiImage(double bmi){
-    if (bmi == 0) return Image(image: AssetImage('asset/none.jpg'),width: 240,);
-    if (bmi < 18.5) return Image(image: AssetImage('asset/underweight.jpeg'),width: 240,);
-    if (bmi <= 24.9) return Image(image: AssetImage('asset/normal.jpg'),width: 240,);
-    if (bmi <= 29.9) return Image(image: AssetImage('asset/overweight.jpg'),width: 240,);
-    return Image(image: AssetImage('asset/obese.png'),width: 240,);
+  Image bmiImage(double bmi) {
+    if (bmi == 0) return Image(image: AssetImage('asset/none.jpg'), width: 240);
+    if (bmi < 18.5)
+      return Image(image: AssetImage('asset/underweight.jpeg'), width: 240);
+    if (bmi <= 24.9)
+      return Image(image: AssetImage('asset/normal.jpg'), width: 240);
+    if (bmi <= 29.9)
+      return Image(image: AssetImage('asset/overweight.jpg'), width: 240);
+    return Image(image: AssetImage('asset/obese.png'), width: 240);
   }
 
   //method for calculation of input data units................//
   void _calculator() {
-
     final bmi = weightType == WeightType.kg ? kgCal() : lbsToKgCal();
     final cat = categoryResult(bmi!);
     setState(() {
@@ -163,14 +195,47 @@ class _BmiHomeState extends State<BmiHome> {
     weightKGController.dispose();
     weightLbsController.dispose();
     heightCMController.dispose();
+    heightMeterController.dispose();
     heightFeetController.dispose();
     heightInchController.dispose();
     super.dispose();
+  }
+  //here we clear all field by click in floating button...//
+  void _clearAllFields() {
+    setState(() {
+      // Clear all text fields
+      weightKGController.clear();
+      weightLbsController.clear();
+      heightCMController.clear();
+      heightMeterController.clear();
+      heightFeetController.clear();
+      heightInchController.clear();
+
+      // Reset results
+      bmiresult = null;
+      category = null;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('All fields cleared')),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: SizedBox(
+        width: 100,
+        height: 40,
+        child: FloatingActionButton.extended(
+          backgroundColor: Colors.teal,
+          label: Text(
+            'Clear Form',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+          ),
+          onPressed: _clearAllFields,
+        ),
+      ),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.teal,
@@ -301,6 +366,10 @@ class _BmiHomeState extends State<BmiHome> {
                       value: HeightType.feetInch,
                       label: Text('Feet/Inch'),
                     ),
+                    const ButtonSegment<HeightType>(
+                      value: HeightType.meter,
+                      label: Text('Meter'),
+                    ),
                   ],
                   selected: {heightType},
                   //arrow functions for on select change the button selected options.............onselect
@@ -317,7 +386,7 @@ class _BmiHomeState extends State<BmiHome> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-              ] else ...[
+              ] else if(heightType == HeightType.feetInch)...[
                 Row(
                   children: [
                     Expanded(
@@ -341,6 +410,14 @@ class _BmiHomeState extends State<BmiHome> {
                     ),
                   ],
                 ),
+              ]else...[
+                TextFormField(
+                  controller: heightMeterController,
+                  decoration: InputDecoration(
+                    labelText: 'Height (in meter)',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ],
               SizedBox(height: 10),
               ElevatedButton(
@@ -350,27 +427,26 @@ class _BmiHomeState extends State<BmiHome> {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
-                  )
+                  ),
                 ),
                 onPressed: _calculator,
-                child: Text('Show Result',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                child: Text(
+                  'Show Result',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
               SizedBox(height: 10),
               Expanded(
                 child: Card(
-                  color: bmiColor(double.tryParse(bmiresult ?? '')?? 0.0),
+                  color: bmiColor(double.tryParse(bmiresult ?? '') ?? 0.0),
                   child: Center(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Text('Result BMI: ${bmiresult}',
+                        Text(
+                          'Result BMI: ${bmiresult}',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -379,10 +455,11 @@ class _BmiHomeState extends State<BmiHome> {
                         ),
                         SizedBox(height: 7),
                         //this for image to show dynamically....//
-                        bmiImage(double.tryParse(bmiresult ?? '')?? 0.0),
+                        bmiImage(double.tryParse(bmiresult ?? '') ?? 0.0),
                         //..............//
                         SizedBox(height: 7),
-                        Text('Category: $category',
+                        Text(
+                          'Category: $category',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
